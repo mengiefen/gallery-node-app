@@ -1,12 +1,11 @@
 const cuid = require("cuid");
 const { emailSchema } = require("./validations");
-const db = require("./db");
+const db = require("../config/db");
 
 const OrderSchema = new db.Schema({
   _id: { type: String, default: cuid },
   buyerEmail: emailSchema({ required: true }),
   products: [
-    
     {
       type: String,
       ref: "Product",

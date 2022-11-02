@@ -1,5 +1,5 @@
 const cuid = require("cuid");
-const db = require("./db");
+const db = require("../config/db");
 const { urlSchema } = require("./validations");
 
 const ProductSchema = new db.Schema({
