@@ -14,16 +14,6 @@ app.use(middleware.cors);
 app.use(bodyParser.json());
 auth.setMiddleware(app);
 
-// POST /login
-// app.post(
-//   "/login",
-//   passport.authenticate("local", { failureRedirect: "/login" }),
-//   (req, res) => {
-//     res.redirect("/");
-//   }
-// );
-app.post("/login", auth.authenticate, auth.login);
-
 // GET Home page
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -49,6 +39,23 @@ app.get("/orders", auth.ensureAdmin, api.listOrders);
 
 // POST /Orders
 app.post("/orders", auth.ensureAdmin, api.createOrder);
+
+// POST /login
+app.post("/login", auth.authenticate, auth.login);
+// GET /Users
+app.get("/users", api.listUsers);
+
+// POST /users
+app.post("/users", api.createUser);
+
+// GET a User
+app.get("/users/:username", api.getUser);
+
+// DELETE /users/:id
+app.delete("/users/:id", api.deleteUser);
+
+// PUT /users/:id
+app.put("/users/:username", api.updateUser);
 
 // Error Handler - catch all errors and forward to error handler
 app.use(middleware.handleErrors);

@@ -1,5 +1,4 @@
-const isEmail = require("validator/lib/isEmail");
-const isURL = require("validator/lib/isURL");
+const { isAlphanumeric, isURL, isEmail } = require("validator");
 
 function urlSchema(opts = {}) {
   const { required } = opts;
@@ -27,7 +26,42 @@ function emailSchema(opts = {}) {
   };
 }
 
+function usernameSchema() {
+  return {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    minLength: 3,
+    maxLength: 16,
+
+    validate: [
+      {
+        validator: isAlphanumeric,
+        message: (props) => `${props.value} is not a valid username`,
+      },
+
+      {
+        validator: (str) => !str.includes("admin"),
+        message: (props) => `${props.value} is not a valid username`,
+      },
+      // {
+      //   validator: function (username) {
+      //     return isUnique(this, username);
+      //   },
+      //   message: (props) => `${props.value} is already taken`,
+      // },
+    ],
+  };
+}
+
+async function isUnique(doc, username) {
+  const user = await get(username);
+  return !user || user._id === doc._id;
+}
+
 module.exports = {
   urlSchema,
   emailSchema,
+  usernameSchema,
 };
