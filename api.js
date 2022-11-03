@@ -88,8 +88,8 @@ async function updateUser(req, res, next) {
 }
 
 async function deleteUser(req, res, next) {
-  const { username } = req.params;
-  await Users.delete(username);
+  const { id } = req.params;
+  await Users.delete(id);
   res.json({ success: true, message: "User deleted" });
 }
 
