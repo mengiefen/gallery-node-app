@@ -26,19 +26,19 @@ app.get("/products", api.listProducts);
 app.get("/products/:id", api.getProduct);
 
 // POST /products
-app.post("/products", auth.ensureAdmin, api.createProducts);
+app.post("/products", auth.ensureUser, api.createProducts);
 
 // PUT /products/:id
-app.put("/products/:id", auth.ensureAdmin, api.updateProduct);
+app.put("/products/:id", auth.ensureUser, api.updateProduct);
 
 // DELETE /products/:id
-app.delete("/products/:id", auth.ensureAdmin, api.deleteProduct);
+app.delete("/products/:id", auth.ensureUser, api.deleteProduct);
 
 // GET /Orders
-app.get("/orders", auth.ensureAdmin, api.listOrders);
+app.get("/orders", auth.ensureUser, api.listOrders);
 
 // POST /Orders
-app.post("/orders", auth.ensureAdmin, api.createOrder);
+app.post("/orders", auth.ensureUser, api.createOrder);
 
 // POST /login
 app.post("/login", auth.authenticate, auth.login);
