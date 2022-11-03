@@ -51,10 +51,14 @@ function AdminStrategy() {
 }
 
 // A middleware to ensure the user is an admin
-const ensureAdmin = async (req, res, next) => {
+const ensureUser = async (req, res, next) => {
   const jwtString = req.headers.authorization || req.cookies.jwt;
   const payload = await verify(jwtString);
-  if (payload.username === "admin") return next();
+  if (payload.username) {
+    req.user = payload;
+    if (req.user.username === "admin") req.isAdmin = true;
+    return next();
+  }
 
   const err = new Error("Unauthorized");
   err.statusCode = 401;
@@ -73,7 +77,7 @@ async function verify(jwtString) {
 }
 
 module.exports = {
-  ensureAdmin,
+  ensureUser,
   setMiddleware,
   login,
   authenticate,
