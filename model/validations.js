@@ -34,29 +34,30 @@ function usernameSchema() {
     lowercase: true,
     minLength: 3,
     maxLength: 16,
+
     validate: [
       {
         validator: isAlphanumeric,
         message: (props) => `${props.value} is not a valid username`,
       },
+
       {
         validator: (str) => !str.includes("admin"),
         message: (props) => `${props.value} is not a valid username`,
       },
-
-      {
-        validator: function (username) {
-          return isUnique(this, username);
-        },
-        message: (props) => `${props.value} is already taken`,
-      },
+      // {
+      //   validator: function (username) {
+      //     return isUnique(this, username);
+      //   },
+      //   message: (props) => `${props.value} is already taken`,
+      // },
     ],
   };
 }
 
 async function isUnique(doc, username) {
   const user = await get(username);
-  return !user || user._id.equals(doc._id);
+  return !user || user._id === doc._id;
 }
 
 module.exports = {
