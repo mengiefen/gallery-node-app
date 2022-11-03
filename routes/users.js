@@ -3,13 +3,8 @@ const User = require("../model/User");
 
 const SALT = 10;
 
-async function createUser(req, res, next) {
-  const user = await User.create(req.body);
-  res.json(user);
-}
-
 async function get(username) {
-  return await User.findOne({ username });
+  return await User.findOne({ username: username });
 }
 
 async function list(opts = {}) {
@@ -37,8 +32,8 @@ async function update(username, fields) {
   return user;
 }
 
-async function remove(username) {
-  await User.deleteOne({ username });
+async function remove(id) {
+  await User.findByIdAndDelete(id);
 }
 
 async function hashPassword(user) {
