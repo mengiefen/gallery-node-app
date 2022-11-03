@@ -1,7 +1,9 @@
 const passport = require("passport");
+const User = require("../model/User");
 const Strategy = require("passport-local").Strategy;
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const jwtSecret = process.env.JWT_SECRET || "Make it happen";
 const adminPassword = process.env.ADMIN_PASSWORD || "IamM@JUHERE";
@@ -30,14 +32,21 @@ async function sign(payload) {
 }
 
 function AdminStrategy() {
-  return new Strategy(function (username, password, cb) {
+  return new Strategy(async function (username, password, cb) {
     const isAdmin = username === "admin" && password === adminPassword;
 
     if (isAdmin) {
-      cb(null, { username: "admin" });
-    } else {
-      cb(null, false);
+      return cb(null, { username: "admin" });
     }
+
+    try {
+      const user = await User.findOne({ username: username });
+      if (!user) return cb(null, false);
+
+      const isUser = await bcrypt.compare(password, user.password);
+      if (isUser) return cb(null, { username: user.username });
+    } catch (err) {}
+    cb(null, false);
   });
 }
 
